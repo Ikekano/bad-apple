@@ -2,10 +2,6 @@
 #include <iostream>
 #include <vector>
 
-// Define the paths for the replacement PNGs
-const std::string blackPixelImage = "black.png";
-const std::string whitePixelImage = "white.png";
-
 void processFrame(const cv::Mat& frame, cv::Mat& outputFrame, int blockSize, const cv::Mat& blackImg, const cv::Mat& whiteImg) {
     int rows = frame.rows / blockSize;
     int cols = frame.cols / blockSize;
@@ -30,13 +26,16 @@ void processFrame(const cv::Mat& frame, cv::Mat& outputFrame, int blockSize, con
 }
 
 int main(int argc, char** argv) {
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <video_file> <block_size>" << std::endl;
+    if (argc < 6) {
+        std::cout << "Usage: " << argv[0] << " <video_file> <block_size> <black_pixel_image> <white_pixel_image> <output_video>" << std::endl;
         return -1;
     }
     
     std::string videoPath = argv[1];
     int blockSize = std::stoi(argv[2]);
+    std::string blackPixelImage = argv[3];
+    std::string whitePixelImage = argv[4];
+    std::string outputVideo = argv[5];
     
     cv::VideoCapture cap(videoPath);
     if (!cap.isOpened()) {
@@ -58,7 +57,7 @@ int main(int argc, char** argv) {
     int fourcc = cv::VideoWriter::fourcc('a', 'v', 'c', '1');
     cv::Size frameSize(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT));
     double fps = cap.get(cv::CAP_PROP_FPS);
-    cv::VideoWriter videoWriter("output.mp4", fourcc, fps, frameSize);
+    cv::VideoWriter videoWriter(outputVideo, fourcc, fps, frameSize);
     
     if (!videoWriter.isOpened()) {
         std::cerr << "Error: Could not open the output video file for writing." << std::endl;
