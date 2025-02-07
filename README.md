@@ -1,4 +1,6 @@
 # Bad Apple PNG Grid Generator
+This project comes from the internet [meme](https://knowyourmeme.com/memes/bad-apple) and [rule](https://tropedia.fandom.com/wiki/Rules_of_the_Internet) of turning everything into [Bad Apple](https://www.youtube.com/watch?v=FtutLA63Cp8).
+
 This project requires installing OpenCV and ffmpeg. Can be used in a windows environment but linux is preferred. I use WSL and it works just fine.
 
 Since this project is in C++, **g++/gcc** will also be necessary to install if not done already.
@@ -40,8 +42,16 @@ Install the ffmpeg libraries using the command below:
 
 1. Once sucessfully compiled run the program by using the command below:
 
-        ./badapple badapple.mp4 60
+> [!Note]
+> **Command format:** ./badapple \<input filename> \<pixel size (W/H)> \<black pixel filename> \<white pixel filename> \<output filename>
+
+        ./badapple badapple.mp4 20 black.png white.png output.mp4
 
 2. Run the following ffmpeg command if you want to remux the audio to the output video from the program as it will not retain the audio from the input video.
     
         ffmpeg -i output.mp4 -i badapple.mp3 -c:v copy -c:a aac -b:a 116k -map 0:v:0 -map 1:a:0 -shortest -y output-audio.mp4
+
+> [!Note]
+> This project will work with higher resolution and higher framerate versions of bad apple. Those versions will **NOT** be explicitly provided in this repo, but can be integrated into the project very easily.
+>
+> Processing time will vary wildly depending on the increased resolution and framerate of the input video.
