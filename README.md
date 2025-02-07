@@ -40,7 +40,7 @@ Install the ffmpeg libraries using the command below:
 
 1. Once sucessfully compiled run the program by using the command below:
 
-        ./badapple badapple.mp4 60
+        ./badapple badapple.mp4 20 black.png white.png output.mp4
 
 2. Run the following ffmpeg command if you want to remux the audio to the output video from the program as it will not retain the audio from the input video.
     
