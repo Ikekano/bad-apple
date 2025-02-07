@@ -1,4 +1,6 @@
 # Bad Apple PNG Grid Generator
+This project comes from the internet [meme](https://knowyourmeme.com/memes/bad-apple) and [rule](https://tropedia.fandom.com/wiki/Rules_of_the_Internet) of turning everything into [Bad Apple](https://www.youtube.com/watch?v=FtutLA63Cp8).
+
 This project requires installing OpenCV and ffmpeg. Can be used in a windows environment but linux is preferred. I use WSL and it works just fine.
 
 Since this project is in C++, **g++/gcc** will also be necessary to install if not done already.
