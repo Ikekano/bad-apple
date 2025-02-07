@@ -33,6 +33,8 @@ Install the ffmpeg libraries using the command below:
 
 > [!Note]
 > **The images that are used NEED TO BE SQUARE!! and please take note of the width/height of the image you are using!**
+>
+> The repo **INCLUDES** 2 example PNG files that are 20x20 pixels. These can be used to test if the program is working as intended.
 
 3. Compile the program by running the following g++ compiling command.
 
@@ -44,6 +46,8 @@ Install the ffmpeg libraries using the command below:
 
 > [!Note]
 > **Command format:** ./badapple \<input filename> \<pixel size (W/H)> \<black pixel filename> \<white pixel filename> \<output filename>
+>
+> The following example line uses the included example PNGs called black.png and white.png with a size of 20x20
 
         ./badapple badapple.mp4 20 black.png white.png output.mp4
 
