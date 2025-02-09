@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 void processFrame(const cv::Mat& frame, cv::Mat& outputFrame, int blockSize, const cv::Mat& blackImg, const cv::Mat& whiteImg) {
     int rows = frame.rows / blockSize;
@@ -65,13 +66,30 @@ int main(int argc, char** argv) {
     }
     
     cv::setNumThreads(4); // Enable multi-threading for performance boost
+    int totalFrames = cap.get(cv::CAP_PROP_FRAME_COUNT);
+    int currentFrame = 0;
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
     
     while (cap.read(frame)) {
         processFrame(frame, outputFrame, blockSize, blackImg, whiteImg);
         videoWriter.write(outputFrame);
         //cv::imshow("Output", outputFrame);
         //if (cv::waitKey(33) == 27) break; // Press ESC to exit
+	currentFrame++;
+        std::cout << "\rProgress: Frame " << currentFrame << " / " << totalFrames << std::flush;
     }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    
+    std::cout << std::endl;
+    
+    std::chrono::duration<double> elapsed_time = end_time - start_time;
+    std::cout << "Processing completed in " << elapsed_time.count() << " seconds." << std::endl;
+    
+    double avgfps = totalFrames/elapsed_time.count();
+    double timeframe = elapsed_time.count()/totalFrames;
+    std::cout << "Average Time per Frame: " << timeframe << " seconds. (" << avgfps << " fps)" << std::endl;
     
     return 0;
 }
