@@ -117,6 +117,14 @@ int main(int argc, char** argv) {
     
     if (mode == 1) {
         cv::ocl::setUseOpenCL(true);
+	cv::ocl::Context context;
+	if (!context.create(cv::ocl::Device::TYPE_GPU)) {
+            std::cerr << "No GPU OpenCL devices found, trying CPU OpenCL devices..." << std::endl;
+            if (!context.create(cv::ocl::Device::TYPE_CPU)) {
+                std::cerr << "Failed to create OpenCL context, falling back to CPU." << std::endl;
+                mode = 0;
+            }
+        }
         blackImgCPU.copyTo(blackImgOCL);
         whiteImgCPU.copyTo(whiteImgOCL);
     } else if (mode == 0) {
