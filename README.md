@@ -89,7 +89,7 @@ Install the ffmpeg libraries using the command below:
 
     sudo apt install libx264-dev ffmpeg
 
-### 3. Running the project
+### 4. Running the project
 
 1. Once sucessfully setup, run the program by using the command below:
 
