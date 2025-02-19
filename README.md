@@ -5,7 +5,7 @@ This project requires installing OpenCV and ffmpeg. Can be used in a windows env
 
 Since this project is in C++, **g++/gcc** will also be necessary to install if not done already.
 
-Python is also supported now, it is about 82.7% slower and seems to produce a file size that's about 60% larger but hey, it's Python
+Python is also supported now, it is about **62-82.7%** slower and seems to produce a file size that's about **68.5-131.7%** larger but hey, it's Python
 
 ## Setup and Installation (C++)
 
