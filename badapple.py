@@ -6,7 +6,7 @@ import time
 import av
 
 # pip install opencv-python
-# pip instal av
+# pip install av
 
 def process_frame(frame, block_size, black_img, white_img):
     rows, cols = frame.shape[0] // block_size, frame.shape[1] // block_size
@@ -54,16 +54,7 @@ def main():
     fps = cap.get(cv2.CAP_PROP_FPS)
     
     # Python version of openCV does not support native H.264 encoding
-    # Using mp4v works, but the file sizes are huge
     # PyAV is better and will be used instead
-    #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    #out = cv2.VideoWriter(output_video, fourcc, fps, (frame_width, frame_height))
-
-    #if not out.isOpened():
-    #    print("Error: Could not open the output video file for writing.")
-    #    sys.exit(-1)
-
-    # PyAV: Initialize the output file
     output_container = av.open(output_video, mode='w')
     stream = output_container.add_stream('libx264', rate=int(fps))
     stream.width = frame_width
