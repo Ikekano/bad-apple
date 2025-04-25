@@ -13,7 +13,7 @@ void processFrame(const cv::Mat& frame, int blockSize, bool textMode, const cv::
     cv::cvtColor(resized, resized, cv::COLOR_BGR2GRAY);
 
     if (textMode) {
-        std::cout << "\033[H"; // Move cursor to home position
+        std::cout << "\033[H"; // Move cursor to top-left
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 uchar pixel = resized.at<uchar>(i, j);
@@ -39,17 +39,48 @@ void processFrame(const cv::Mat& frame, int blockSize, bool textMode, const cv::
 }
 
 int main(int argc, char** argv) {
-    if (argc < 6) {
-        std::cout << "Usage: " << argv[0] << " <video_file> <block_size> <black_pixel_image> <white_pixel_image> <output_video> [--text]" << std::endl;
+    bool textMode = false;
+    std::vector<std::string> args;
+
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--text") {
+            textMode = true;
+        } else {
+            args.push_back(argv[i]);
+        }
+    }
+
+    if (args.size() < 2) {
+        std::cout << "Usage:\n";
+        std::cout << "  Text Mode (auto or forced):\n";
+        std::cout << "    " << argv[0] << " <video_file> <block_size> [--text]\n";
+        std::cout << "  Video Mode:\n";
+        std::cout << "    " << argv[0] << " <video_file> <block_size> <black_img> <white_img> <output_video>\n";
         return -1;
     }
 
-    std::string videoPath = argv[1];
-    int blockSize = std::stoi(argv[2]);
-    std::string blackPixelImage = argv[3];
-    std::string whitePixelImage = argv[4];
-    std::string outputVideo = argv[5];
-    bool textMode = (argc >= 7 && std::string(argv[6]) == "--text");
+    if (!textMode && args.size() < 5) {
+        textMode = true;
+    }
+
+    std::string videoPath = args[0];
+    int blockSize = std::stoi(args[1]);
+
+    std::string blackPixelImage, whitePixelImage, outputVideo;
+    cv::Mat blackImg, whiteImg;
+
+    if (!textMode) {
+        blackPixelImage = args[2];
+        whitePixelImage = args[3];
+        outputVideo = args[4];
+        blackImg = cv::imread(blackPixelImage);
+        whiteImg = cv::imread(whitePixelImage);
+
+        if (blackImg.empty() || whiteImg.empty()) {
+            std::cerr << "Error loading replacement images." << std::endl;
+            return -1;
+        }
+    }
 
     cv::VideoCapture cap(videoPath);
     if (!cap.isOpened()) {
@@ -57,23 +88,17 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    cv::Mat blackImg = cv::imread(blackPixelImage);
-    cv::Mat whiteImg = cv::imread(whitePixelImage);
-
-    if (!textMode && (blackImg.empty() || whiteImg.empty())) {
-        std::cerr << "Error loading replacement images." << std::endl;
-        return -1;
-    }
-
     cv::Mat frame, outputFrame;
-
     cv::VideoWriter videoWriter;
+
+    double fps = cap.get(cv::CAP_PROP_FPS);
+    int totalFrames = cap.get(cv::CAP_PROP_FRAME_COUNT);
+    int currentFrame = 0;
+
     if (!textMode) {
         int fourcc = cv::VideoWriter::fourcc('a', 'v', 'c', '1');
         cv::Size frameSize(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT));
-        double fps = cap.get(cv::CAP_PROP_FPS);
         videoWriter.open(outputVideo, fourcc, fps, frameSize);
-
         if (!videoWriter.isOpened()) {
             std::cerr << "Error: Could not open the output video file for writing." << std::endl;
             return -1;
@@ -81,13 +106,9 @@ int main(int argc, char** argv) {
     }
 
     cv::setNumThreads(4);
-    int totalFrames = cap.get(cv::CAP_PROP_FRAME_COUNT);
-    double fps = cap.get(cv::CAP_PROP_FPS);
-    int currentFrame = 0;
-
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    if (textMode) std::cout << "\033[2J"; // Clear screen once
+    if (textMode) std::cout << "\033[2J"; // Clear terminal once
 
     while (cap.read(frame)) {
         processFrame(frame, blockSize, textMode, blackImg, whiteImg, outputFrame);
@@ -104,8 +125,8 @@ int main(int argc, char** argv) {
     }
 
     auto end_time = std::chrono::high_resolution_clock::now();
-
     std::cout << std::endl;
+
     std::chrono::duration<double> elapsed_time = end_time - start_time;
     std::cout << "Processing completed in " << elapsed_time.count() << " seconds." << std::endl;
 
