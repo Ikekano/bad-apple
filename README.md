@@ -47,11 +47,22 @@ Install the ffmpeg libraries using the command below:
 1. Once sucessfully compiled, run the program by using the command below:
 
 > [!Note]
+> **Video Mode:**
+> 
 > **Command format:** ./badapple \<input filename> \<pixel size (W/H)> \<black pixel filename> \<white pixel filename> \<output filename>
 >
 > The following example line uses the included example PNGs called black.png and white.png with a size of 20x20
 
         ./badapple badapple.mp4 20 black.png white.png output.mp4
+
+> [!Note]
+> **Text Mode:**
+> 
+> **Command format:** ./badapple \<input filename> \<pixel size (W/H)> --text
+>
+> The following example line will activate text output mode and only the input file, pixel size, and the --text flag are needed
+
+        ./badapple badapple.mp4 20 --text
 
 2. Run the following ffmpeg command if you want to remux the audio to the output video from the program as it will not retain the audio from the input video.
     
