@@ -32,4 +32,5 @@ WORKDIR /app/bad-apple
 RUN     g++ badapple.cpp -o badapple -I/usr/include/opencv4 -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs
 
 # Command to run the program
-CMD     ["./badapple", "badapple.mp4", "20", "black.png", "white.png", "output.mp4"]
+#CMD     ["./badapple", "badapple.mp4", "20", "black.png", "white.png", "output.mp4"]
+CMD     ["./badapple", "badapple.mp4", "20", "--text"]
